@@ -22,7 +22,7 @@
 MyGPTsがわからない方へ：この   * [`MyGPT-instruct.md`](./MyGPT-instruct.md) … 指示プロンプトは **普通のChatGPT画面にそのままコピペ** しても使えます。  
 
 
-## ファイル
+## ファイル（開いたら、右上のダウンロードボタンでローカルに落としてください）
 
 * [`README.md`](./README.md) … 本書
 * [`MyGPT-setup.md`](./MyGPT-setup.md) … MyGPTs での設定手順
