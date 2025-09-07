@@ -1,140 +1,111 @@
-## プロンプトインタプリタ for MyGPTs
 
-**目的**
-相談文や資料を **診断→補完→確認→他AI向けの指示プロンプト** に変換します。出力は **\[📝骨子]**（最小セット）と **\[📚詳細]**（完成版）の二層。
+# README.md
 
-**特徴**
+## Why Prompt Interpreter?
 
-* 🤖 独り言で進行を1行表示（現在地の見える化）
-* 💡 備考は任意閲覧の仮置きメモ（最大3点）
-* 外部資料は**統合サマリー**化して文脈に反映（情報は削らず整理）
-* 内部でドメイン推定を行い、観点を**さりげなく補強**
-* 不足が多い場合、**不足項目を具体列挙**して再添付を依頼
-* 初回のみ **起動UI**、以降は**即Diagnosis**（必要時だけミニUI）
-
-**前提**
-
-* 本プロンプトは **日本語利用を前提に設計**（英語可だが最適は日本語）。
-* 共有時の課金は **利用者のChatGPTプラン** に依存（作成者に課金なし）。
-* 機密情報の貼り付けは避け、出力の妥当性は利用者が確認。
-
-**☺️ 補足 ☺️**
-MyGPTsがわからない方へ：この   * [`MyGPT-instruct.md`](./MyGPT-instruct.md) … 指示プロンプトは **普通のChatGPT画面にそのままコピペ** しても使えます。  
+👉 Japanese version available: [README-JP.md](./README-JP.md)
 
 
-## ファイル（開いたら、右上のダウンロードボタンでローカルに落としてください）
+Working with generative AI often begins with enthusiasm and ends with frustration.
+Why? Because the first barrier is not the AI itself—it’s the *prompt*.
 
-* [`README.md`](./README.md) … 本書
-* [`MyGPT-setup.md`](./MyGPT-setup.md) … MyGPTs での設定手順
-* [`MyGPT-instruct.md`](./MyGPT-instruct.md) … **Instructions（指示プロンプト全文）**
+* Write too vaguely, and the AI misunderstands your intent.
+* Paste long documents without context, and you get half-baked answers.
+* Ask ten people to write a “good prompt,” and you’ll get ten completely different styles—some usable, some not at all.
 
-## クイックスタート（MyGPTs）
-
-1. ChatGPT → **GPTs を探索** → **Create a GPT**
-2. **Name**: Prompt Interpreter v1.5
-3. **Description**: 本READMEの趣旨を要約して記入
-4. **Instructions**: [`MyGPT-instruct.md`](./MyGPT-instruct.md) を丸ごと貼付
-5. **Welcome message**: `MyGPT-setup.md` の指示通りに設定
-6. 保存 → 共有（社内限定／外部公開）
-
-## どんな時に使うか
-
-* 提案書や議事録を**他AIへ正しく渡す指示**に落としたい
-* 資料が多く、**不足や矛盾を素早く可視化**したい
-* 曖昧な相談を**分岐案**にして意思決定を早めたい
+The result? Endless rework, wasted hours, and the sinking feeling of “AI was supposed to save me time, not cost me more of it.”
 
 ---
 
-# Why-Prompt-Interpreter.md（ビジネス向け解説資料）
+## Enter the Prompt Interpreter
 
-## なぜプロンプトは難しいのか
+The **Prompt Interpreter** was designed to solve this exact pain.
+Think of it as a **translator between your messy thoughts and the AI’s strict instructions**.
 
-* **言語化のばらつき**：人によって前提の書き方・粒度が違う
-* **情報の欠落**：重要な制約や関係者情報が抜けやすい
-* **資料の分散**：複数ファイルの内容が矛盾・重複
-* **AIの誤読**：曖昧な指示で意図が伝わらず、手戻りが発生
+Here’s what it does:
 
-### 現実の影響（典型例）
+1. **Diagnose** your input
 
-* 作業のやり直しで**時間コスト増大**
-* 期待と結果のズレによる**意思決定の遅延**
-* 機密や誤情報の混入による**リスク増**
+   * Splits apart vague wording, missing details, and contradictions.
+   * Shows progress via small 🤖 “robot asides,” so you always know what it’s doing.
 
-## 本ツールの解決アプローチ
+2. **Supplement & confirm**
 
-* 相談・資料を **診断** し、**欠落・曖昧・矛盾** を可視化
-* **仮置き**（💡）で不足を埋め、必要時は**具体的な追加資料**を依頼
-* 外部資料を**統合サマリー**化（情報は**削らず整理**）
-* **内部ドメイン推定**で観点を補強（出力は汎用形のまま）
-* 他AIに渡せる **\[📝骨子] / \[📚詳細]** の二層で最終化
+   * Drops in 💡 “assumptions” to fill obvious gaps.
+   * If something important is missing, it politely asks you to add or re-attach.
 
-## フロー図（概念）
+3. **Summarize documents**
 
-```mermaid
-graph TD
-user[ユーザー入力] --> intake[Intake]
-intake --> diagnosis[診断整理]
-diagnosis --> confirm[確認対話]
-confirm --> build[プロンプト生成]
-build --> core[骨子]
-build --> detail[詳細]
-detail --> otherai[他AI実行]
-```
+   * If you provide multiple files or long notes, it creates a **consolidated summary**—tidy but never omitting key information.
 
-## 外部資料の扱い
+4. **Infer domain silently**
 
-```mermaid
-graph TD
-files[外部資料複数] --> index[要点抽出]
-index --> summary[統合サマリー]
-summary --> diagnosis[診断整理]
-diagnosis --> gapscheck[不足判定]
-gapscheck -->|不足| reattach[再添付依頼]
-gapscheck -->|十分| confirm[確認対話]
-```
+   * Business, education, technology… the Interpreter guesses your domain and subtly adds relevant angles without breaking generality.
 
-## 状態に応じた分岐
+5. **Output in two layers**
 
-```mermaid
-graph TD
-start[開始] --> spec[具体度判定]
-spec --> low[抽象]
-spec --> mid[中間]
-spec --> high[明確]
-low --> multi[複数案提示]
-mid --> oneortwo[一二案提示]
-high --> single[単一案提示]
-```
-
-## ビジネス価値訴求
-
-* **手戻り削減**：不足・矛盾を前段で潰す → 再作業が減る
-* **スピード**：骨子で即合意 → 詳細を一気に作成
-* **再現性**：個人差の大きい言語化を**仕組み化**
-* **安全性**：不足時に**具体的な項目**を挙げて再添付を促す
-* **適応性**：業界を問わない**汎用形**だが、内部推定で観点を補強
-
-## 使い方（最短ステップ）
-
-1. 相談を書く、または資料をまとめて貼る
-2. 出てきた整理（🤖／💡／\[📝]）を**ざっと確認**
-3. 必要なら修正・再添付
-4. **\[📚詳細]** を他AIに渡して実行
-
-## よくある質問
-
-* **Q. 情報を削ってしまわないか**
-  A. 統合サマリーは**削減ではなく整理**。重要事項は残し、余剰は💡に退避。
-* **Q. 英語で使えるか**
-  A. 可能。ただし**日本語最適化**が前提。
-* **Q. 機密は大丈夫か**
-  A. 公開可能な情報のみ使用。出力の最終確認は利用者が実施。
+   * \[📝 Core] → the lean, minimal set you can hand to another AI immediately.
+   * \[📚 Detail] → the full-fledged prompt, with constraints, success criteria, and context baked in.
 
 ---
 
-> リポジトリ運用メモ
->
-> * 公開は GPT 前提（Gemini 記述は削除）
-> * README に **日本語前提・課金は利用者側** を明記
-> * 入口は `MyGPT-setup.md` → `MyGPT-instruct.md` の順で案内
+## Why is this valuable?
+
+* **Less rework** – No more starting over because the AI “didn’t get it.”
+* **Speed** – First align on the core skeleton, then dive into detail.
+* **Reproducibility** – Removes the personal “prompting style” bias; everyone can generate consistent, usable prompts.
+* **Safety** – Instead of guessing, it lists *exact missing items* and asks for clarification.
+* **Flexibility** – Domain-agnostic, but smart enough to enrich context when needed.
+
+For business users, this means proposal drafts, meeting notes, or research briefs are prepared for AI execution without hours of back-and-forth. For educators, it means lesson design that doesn’t get lost in translation. For tech teams, it means requirements and investigations get structured cleanly, even from messy source material.
+
+---
+
+## Quickstart
+
+You can use Prompt Interpreter in **two ways**:
+
+1. **As a MyGPT (recommended)**
+
+   * Create a custom GPT in ChatGPT → Paste in the instructions from [`MyGPT-instruct-EN.md`](./MyGPT-instruct-EN.md).
+   * Follow the setup steps in [`MyGPT-setup-EN.md`](./MyGPT-setup-EN.md).
+   * You’ll get the full experience: startup UI, state management, mini-UI prompts when needed.
+
+2. **Copy-paste into regular ChatGPT**
+
+   * Don’t know what MyGPT is? No problem.
+   * Simply copy the instruction prompt and paste it directly into a standard ChatGPT chat.
+   * It behaves slightly differently (no auto-start UI, state less visible), but the **diagnose → supplement → confirm → build** flow still works.
+
+---
+
+## File structure
+
+* [`README.md`](./README.md) … English documentation (this file)
+* [`README-JP.md`](./README-JP.md) … Japanese documentation
+* [`MyGPT-setup-EN.md`](./MyGPT-setup-EN.md) … Setup guide for MyGPT (English)
+* [`MyGPT-setup-JP.md`](./MyGPT-setup-JP.md) … Setup guide for MyGPT (Japanese)
+* [`MyGPT-instruct-EN.md`](./MyGPT-instruct-EN.md) … Instruction prompt (English)
+* [`MyGPT-instruct-JP.md`](./MyGPT-instruct-JP.md) … Instruction prompt (Japanese)
+
+---
+
+## Important notes
+
+* **Costs** → Usage depends on each user’s ChatGPT plan (Free, Plus, Team, Enterprise). The creator does **not** pay for other people’s usage.
+* **Languages** → This repository provides both English and Japanese versions. Choose what fits your workflow.
+* **Information handling** → Only paste information you’re comfortable sharing. The Interpreter organizes and clarifies, but does not magically sanitize confidential material.
+
+---
+
+## Final word
+
+Prompt Interpreter is not another static “prompt library.”
+It’s a **dynamic companion** that listens, diagnoses, and helps you produce **AI-ready instructions**.
+
+Think of it as the friendly colleague who takes your rough notes and turns them into a clean brief—except this colleague never gets tired, never judges, and always leaves a little 🤖 aside to let you know what’s happening.
+
+👉 For Japanese version, see [README-JP.md](./README-JP.md).
+
+---
 

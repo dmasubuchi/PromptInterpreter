@@ -30,7 +30,7 @@ MyGPTs を作成すると、誰でも簡単に相談文や資料を **診断 →
 ## 3. 指示プロンプト（Instructions）
 
 * 下記ファイルにある指示プロンプト全文をコピーして貼り付けてください：
-  👉 [MyGPT-instruct.md](./MyGPT-instruct.md)
+  👉 [MyGPT-instruct-JP.md](./MyGPT-instruct-JP.md)
 
 ---
 
@@ -82,7 +82,7 @@ MyGPTs を作成すると、誰でも簡単に相談文や資料を **診断 →
 
 ---
 
-こうすれば `MyGPT-setup.md` は **手順書**、`MyGPT-instruct.md` は **プロンプト本文**、`README.md` は **全体説明**として三位一体で動きます。
+こうすれば `MyGPT-setup-JP.md` は **手順書**、`MyGPT-instruct-JP.md` は **プロンプト本文**、`README-JP.md` は **全体説明**として三位一体で動きます。
 
 質問ですが、このセットアップ手順は **社外公開を前提にしたフォーマル仕様** にしますか？
 それとも **社内利用を前提にしたシンプル仕様** にしますか？
