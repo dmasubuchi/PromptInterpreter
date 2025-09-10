@@ -3,7 +3,8 @@
 
 ## Why Prompt Interpreter?
 
-👉 Japanese version available: [README-JP.md](./README-JP.md)
+プロンプトインタプリタは、相談や資料を整理し、他のAIが正しく動くための指示プロンプトを自動生成するツールです。
+日本語こちら 👉 Japanese version available: [README-JP.md](./README-JP.md)
 
 
 Working with generative AI often begins with enthusiasm and ends with frustration.
